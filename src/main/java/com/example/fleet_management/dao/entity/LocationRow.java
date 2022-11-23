@@ -1,9 +1,12 @@
 package com.example.fleet_management.dao.entity;
 
+import com.example.fleet_management.domain.Location;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "location")
@@ -73,6 +76,39 @@ public class LocationRow {
 
     public void setDeliveryOrderRows(Set<DeliveryOrderRow> deliveryOrderRows) {
         this.deliveryOrderRows = deliveryOrderRows;
+    }
+
+    public static LocationRow toLocationRow(Location location) {
+
+        final var deliveryOrderRows = location.getDeliveryOrderSet()
+                .stream()
+                .map(DeliveryOrderRow::toDeliveryOrderRow)
+                .collect(Collectors.toSet());
+
+        return new LocationRow(
+                location.getLocationId(),
+                location.getName(),
+                location.getLatitude(),
+                location.getLongitude(),
+                deliveryOrderRows
+        );
+    }
+
+    public Location toLocation() {
+
+        final var deliveryOrderSet = this.getDeliveryOrderRows()
+                .stream()
+                .map(DeliveryOrderRow::toDeliveryOrder)
+                .collect(Collectors.toSet());
+
+        return new Location(
+
+                this.getId(),
+                this.getName(),
+                this.getLatitude(),
+                this.getLongitude(),
+                deliveryOrderSet
+        );
     }
 
     @Override

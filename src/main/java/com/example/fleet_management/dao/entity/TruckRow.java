@@ -1,10 +1,12 @@
 package com.example.fleet_management.dao.entity;
 
+import com.example.fleet_management.domain.Truck;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "truck")
@@ -87,6 +89,40 @@ public class TruckRow {
 
     public void setDeliveryOrderRows(Set<DeliveryOrderRow> deliveryOrderRows) {
         this.deliveryOrderRows = deliveryOrderRows;
+    }
+
+    public static TruckRow toTruckRow(Truck truck) {
+
+        final var deliveryOrderRows = truck.getDeliveryOrderSet()
+                .stream()
+                .map(DeliveryOrderRow::toDeliveryOrderRow)
+                .collect(Collectors.toSet());
+
+        return new TruckRow(
+                truck.getTruckId(),
+                truck.getLicensePlate(),
+                truck.getManufacturer(),
+                truck.getModel(),
+                truck.getKilometersPerLiter(),
+                deliveryOrderRows
+        );
+    }
+
+    public Truck toTruck() {
+
+        final var deliveryOrderSet = this.getDeliveryOrderRows()
+                .stream()
+                .map(DeliveryOrderRow::toDeliveryOrder)
+                .collect(Collectors.toSet());
+
+        return new Truck(
+                this.getId(),
+                this.getLicensePlate(),
+                this.getManufacturer(),
+                this.getModel(),
+                this.getKilometersPerLiter(),
+                deliveryOrderSet
+        );
     }
 
     @Override

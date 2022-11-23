@@ -1,10 +1,15 @@
 package com.example.fleet_management.dao.entity;
 
+import com.example.fleet_management.domain.DeliveryOrder;
+import com.example.fleet_management.domain.Truck;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
+
+import static com.example.fleet_management.dao.entity.LocationRow.toLocationRow;
+import static com.example.fleet_management.dao.entity.TruckRow.toTruckRow;
 
 @Entity
 @Table(name = "delivery_order")
@@ -86,6 +91,39 @@ public class DeliveryOrderRow {
 
     public LocalDateTime getDateTime() {
         return dateTime;
+    }
+
+    public static DeliveryOrderRow toDeliveryOrderRow(DeliveryOrder deliveryOrder) {
+
+        final var truckRow = toTruckRow(deliveryOrder.getTruck());
+        final var originLocationRow = toLocationRow(deliveryOrder.getOriginLocation());
+        final var deliveryLocationRow = toLocationRow(deliveryOrder.getDeliveryLocation());
+
+        return new DeliveryOrderRow(
+                deliveryOrder.getOrderId(),
+                truckRow,
+                originLocationRow,
+                deliveryLocationRow,
+                deliveryOrder.getDistance(),
+                deliveryOrder.getTimestamp()
+        );
+    }
+
+    public DeliveryOrder toDeliveryOrder() {
+
+        final var truck = this.getTruckRow().toTruck();
+        final var originLocation = this.getOriginLocation().toLocation();
+        final var deliveryLocation = this.getDeliveryLocation().toLocation();
+
+        return new DeliveryOrder(
+
+                this.getId(),
+                truck,
+                originLocation,
+                deliveryLocation,
+                this.getDistance(),
+                this.getDateTime()
+        );
     }
 
     @Override
