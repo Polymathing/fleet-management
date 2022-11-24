@@ -5,15 +5,15 @@ import java.util.Set;
 
 public class Truck {
 
-    private final Long truckId;
+    private final Long id;
     private final String licensePlate;
     private final String manufacturer;
     private final String model;
     private final Float kilometersPerLiter;
     private final Set<DeliveryOrder> deliveryOrderSet;
 
-    public Truck(Long truckId, String licensePlate, String manufacturer, String model, Float kilometersPerLiter, Set<DeliveryOrder> deliveryOrderSet) {
-        this.truckId = truckId;
+    public Truck(Long id, String licensePlate, String manufacturer, String model, Float kilometersPerLiter, Set<DeliveryOrder> deliveryOrderSet) {
+        this.id = id;
         this.licensePlate = licensePlate;
         this.manufacturer = manufacturer;
         this.model = model;
@@ -21,8 +21,8 @@ public class Truck {
         this.deliveryOrderSet = deliveryOrderSet;
     }
 
-    public Long getTruckId() {
-        return truckId;
+    public Long getId() {
+        return id;
     }
 
     public String getLicensePlate() {
@@ -50,18 +50,18 @@ public class Truck {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Truck truck = (Truck) o;
-        return Objects.equals(truckId, truck.truckId) && Objects.equals(licensePlate, truck.licensePlate) && Objects.equals(manufacturer, truck.manufacturer) && Objects.equals(model, truck.model) && Objects.equals(kilometersPerLiter, truck.kilometersPerLiter) && Objects.equals(deliveryOrderSet, truck.deliveryOrderSet);
+        return Objects.equals(id, truck.id) && Objects.equals(licensePlate, truck.licensePlate) && Objects.equals(manufacturer, truck.manufacturer) && Objects.equals(model, truck.model) && Objects.equals(kilometersPerLiter, truck.kilometersPerLiter) && Objects.equals(deliveryOrderSet, truck.deliveryOrderSet);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(truckId, licensePlate, manufacturer, model, kilometersPerLiter, deliveryOrderSet);
+        return Objects.hash(id, licensePlate, manufacturer, model, kilometersPerLiter, deliveryOrderSet);
     }
 
     @Override
     public String toString() {
         return "Truck{" +
-                "truckId=" + truckId +
+                "truckId=" + id +
                 ", licensePlate='" + licensePlate + '\'' +
                 ", manufacturer='" + manufacturer + '\'' +
                 ", model='" + model + '\'' +

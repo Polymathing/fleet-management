@@ -5,15 +5,15 @@ import java.util.Objects;
 
 public class DeliveryOrder {
 
-    private final Long orderId;
+    private final Long id;
     private final Truck truck;
     private final Location originLocation;
     private final Location deliveryLocation;
     private final Float distance;
     private final LocalDateTime timestamp;
 
-    public DeliveryOrder(Long orderId, Truck truck, Location originLocation, Location deliveryLocation, Float distance, LocalDateTime timestamp) {
-        this.orderId = orderId;
+    public DeliveryOrder(Long id, Truck truck, Location originLocation, Location deliveryLocation, Float distance, LocalDateTime timestamp) {
+        this.id = id;
         this.truck = truck;
         this.originLocation = originLocation;
         this.deliveryLocation = deliveryLocation;
@@ -21,8 +21,8 @@ public class DeliveryOrder {
         this.timestamp = timestamp;
     }
 
-    public Long getOrderId() {
-        return orderId;
+    public Long getId() {
+        return id;
     }
 
     public Truck getTruck() {
@@ -50,18 +50,18 @@ public class DeliveryOrder {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DeliveryOrder that = (DeliveryOrder) o;
-        return orderId.equals(that.orderId) && truck.equals(that.truck) && originLocation.equals(that.originLocation) && deliveryLocation.equals(that.deliveryLocation) && distance.equals(that.distance) && timestamp.equals(that.timestamp);
+        return id.equals(that.id) && truck.equals(that.truck) && originLocation.equals(that.originLocation) && deliveryLocation.equals(that.deliveryLocation) && distance.equals(that.distance) && timestamp.equals(that.timestamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderId, truck, originLocation, deliveryLocation, distance, timestamp);
+        return Objects.hash(id, truck, originLocation, deliveryLocation, distance, timestamp);
     }
 
     @Override
     public String toString() {
         return "DeliveryOrder{" +
-                "orderId=" + orderId +
+                "orderId=" + id +
                 ", truck=" + truck +
                 ", originLocation=" + originLocation +
                 ", deliveryLocation=" + deliveryLocation +

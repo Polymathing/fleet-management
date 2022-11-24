@@ -99,7 +99,7 @@ public class TruckRow {
                 .collect(Collectors.toSet());
 
         return new TruckRow(
-                truck.getTruckId(),
+                truck.getId(),
                 truck.getLicensePlate(),
                 truck.getManufacturer(),
                 truck.getModel(),

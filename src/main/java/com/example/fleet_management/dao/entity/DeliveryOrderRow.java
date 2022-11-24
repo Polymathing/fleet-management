@@ -1,7 +1,6 @@
 package com.example.fleet_management.dao.entity;
 
 import com.example.fleet_management.domain.DeliveryOrder;
-import com.example.fleet_management.domain.Truck;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -100,7 +99,7 @@ public class DeliveryOrderRow {
         final var deliveryLocationRow = toLocationRow(deliveryOrder.getDeliveryLocation());
 
         return new DeliveryOrderRow(
-                deliveryOrder.getOrderId(),
+                deliveryOrder.getId(),
                 truckRow,
                 originLocationRow,
                 deliveryLocationRow,
