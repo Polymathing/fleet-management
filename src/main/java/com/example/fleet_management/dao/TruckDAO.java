@@ -37,6 +37,13 @@ public class TruckDAO {
                 .map(TruckRow::toTruck);
     }
 
+    @Transactional(readOnly = true)
+    public Optional<Truck> findByLicensePlate(String licensePlate) {
+
+        return truckRepository.findByLicensePlate(licensePlate)
+                .map(TruckRow::toTruck);
+    }
+
     @Transactional
     public Truck save(Truck truck) {
 
@@ -47,20 +54,11 @@ public class TruckDAO {
     }
 
     @Transactional
-    public Optional<Truck> update(Truck truck) {
+    public Optional<Truck> update(Long id, Truck truck) {
 
-        return truckRepository.findById(truck.getId())
+        return truckRepository.findById(id)
                 .map(dbRecord -> {
 
-                    final var deliveryOrderRows = truck.getDeliveryOrderSet()
-                            .stream()
-                            .map(DeliveryOrderRow::toDeliveryOrderRow)
-                            .collect(Collectors.toSet());
-
-                    dbRecord.setDeliveryOrderRows(deliveryOrderRows);
-                    dbRecord.setModel(truck.getModel());
-                    dbRecord.setManufacturer(truck.getManufacturer());
-                    dbRecord.setLicensePlate(truck.getLicensePlate());
                     dbRecord.setKilometersPerLiter(truck.getKilometersPerLiter());
 
                     return dbRecord;
@@ -68,7 +66,7 @@ public class TruckDAO {
     }
 
     @Transactional
-    public boolean delete(Long id) {
+    public boolean deleteById(Long id) {
 
         return truckRepository.findById(id)
                 .map(truckRow -> {

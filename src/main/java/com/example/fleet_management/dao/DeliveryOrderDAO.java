@@ -5,7 +5,6 @@ import com.example.fleet_management.dao.entity.LocationRow;
 import com.example.fleet_management.dao.entity.TruckRow;
 import com.example.fleet_management.dao.repository.DeliveryOrderRepository;
 import com.example.fleet_management.domain.DeliveryOrder;
-import com.example.fleet_management.domain.Location;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,24 +51,24 @@ public class DeliveryOrderDAO {
     @Transactional
     public Optional<DeliveryOrder> update(DeliveryOrder deliveryOrder) {
 
-        return deliveryOrderRepository.findById(deliveryOrder.getId())
+        return deliveryOrderRepository.findById(deliveryOrder.id())
                 .map(dbRecord -> {
 
-                    final var truckRow = TruckRow.toTruckRow(deliveryOrder.getTruck());
-                    final var originLocationRow = LocationRow.toLocationRow(deliveryOrder.getOriginLocation());
-                    final var deliveryLocationRow = LocationRow.toLocationRow(deliveryOrder.getDeliveryLocation());
+                    final var truckRow = TruckRow.toTruckRow(deliveryOrder.truck());
+                    final var originLocationRow = LocationRow.toLocationRow(deliveryOrder.origin());
+                    final var deliveryLocationRow = LocationRow.toLocationRow(deliveryOrder.destination());
 
                     dbRecord.setTruckRow(truckRow);
-                    dbRecord.setDeliveryLocation(deliveryLocationRow);
-                    dbRecord.setOriginLocation(originLocationRow);
-                    dbRecord.setDistance(deliveryOrder.getDistance());
+                    dbRecord.setDestination(deliveryLocationRow);
+                    dbRecord.setOrigin(originLocationRow);
+                    dbRecord.setDistance(deliveryOrder.distance());
 
                     return dbRecord;
                 }).map(DeliveryOrderRow::toDeliveryOrder);
     }
 
     @Transactional
-    public boolean delete(Long id) {
+    public boolean deleteById(Long id) {
 
         return deliveryOrderRepository.findById(id)
                 .map(dbRecord -> {

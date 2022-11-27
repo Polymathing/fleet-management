@@ -22,12 +22,12 @@ CREATE TABLE IF NOT EXISTS delivery_order
 (
     "id"                   BIGINT NOT NULL,
     "truck_id"             BIGINT NOT NULL,
-    "origin_location_id"   BIGINT NOT NULL,
-    "delivery_location_id" BIGINT NOT NULL,
+    "origin_id"   BIGINT NOT NULL,
+    "destination_id" BIGINT NOT NULL,
     "distance"             FLOAT NOT NULL,
     "date_time"            TIMESTAMP NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (truck_id) REFERENCES truck(id),
-    FOREIGN KEY (origin_location_id) REFERENCES location(id),
-    FOREIGN KEY (delivery_location_id) REFERENCES location(id)
+    FOREIGN KEY (origin_id) REFERENCES location(id),
+    FOREIGN KEY (destination_id) REFERENCES location(id)
 );

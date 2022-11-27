@@ -13,16 +13,16 @@ import java.util.stream.Collectors;
 
 @Component
 public class LocationDAO {
-    private final LocationRepository locationRepository;
+    private final LocationRepository repository;
 
-    public LocationDAO(LocationRepository locationRepository) {
-        this.locationRepository = locationRepository;
+    public LocationDAO(LocationRepository repository) {
+        this.repository = repository;
     }
 
     @Transactional(readOnly = true)
     public Set<Location> findAll() {
 
-        return locationRepository.findAll()
+        return repository.findAll()
                 .stream()
                 .map(LocationRow::toLocation)
                 .collect(Collectors.toSet());
@@ -32,7 +32,7 @@ public class LocationDAO {
     public Optional<Location> findById(Long id) {
 
 
-        return locationRepository.findById(id)
+        return repository.findById(id)
                 .map(LocationRow::toLocation);
     }
 
@@ -40,38 +40,32 @@ public class LocationDAO {
     public Location save(Location location) {
 
         final var locationRow = LocationRow.toLocationRow(location);
-        final var dbRecord = locationRepository.save(locationRow);
+        final var dbRecord = repository.save(locationRow);
 
         return dbRecord.toLocation();
     }
 
     @Transactional
-    public Optional<Location> update(Location location) {
+    public Optional<Location> update(Long id, Location location) {
 
-        return locationRepository.findById(location.getLocationId())
+        return repository.findById(id)
                 .map(dbRecord -> {
-
-                    final var deliveryOrderRows = location.getDeliveryOrderSet()
-                            .stream()
-                            .map(DeliveryOrderRow::toDeliveryOrderRow)
-                            .collect(Collectors.toSet());
 
                     dbRecord.setName(location.getName());
                     dbRecord.setLatitude(location.getLatitude());
                     dbRecord.setLongitude(location.getLongitude());
-                    dbRecord.setDeliveryOrderRows(deliveryOrderRows);
 
                     return dbRecord;
                 }).map(LocationRow::toLocation);
     }
 
     @Transactional
-    public boolean delete(Long id) {
+    public boolean deleteById(Long id) {
 
-        return locationRepository.findById(id)
+        return repository.findById(id)
                 .map(dbRecord -> {
 
-                    locationRepository.delete(dbRecord);
+                    repository.delete(dbRecord);
                     return true;
                 }).orElse(false);
     }

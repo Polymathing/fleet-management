@@ -1,6 +1,7 @@
 package com.example.fleet_management.dao.entity;
 
 import com.example.fleet_management.domain.Location;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -10,33 +11,40 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "location")
+@EntityListeners(AuditingEntityListener.class)
 public class LocationRow {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "latitude", nullable = false)
+    @Column(name = "latitude", nullable = false, precision = 8, scale = 6)
     private BigDecimal latitude;
 
-    @Column(name = "longitude", nullable = false)
+    @Column(name = "longitude", nullable = false, precision = 9, scale = 6)
     private BigDecimal longitude;
 
-    @OneToMany
-    private Set<DeliveryOrderRow> deliveryOrderRows;
+    @OneToMany(mappedBy = "origin")
+    private Set<DeliveryOrderRow> deliveryOrderOriginRows;
 
-    public LocationRow(Long id, String name, BigDecimal latitude, BigDecimal longitude, Set<DeliveryOrderRow> deliveryOrderRows) {
+    @OneToMany(mappedBy = "destination")
+    private Set<DeliveryOrderRow> deliveryOrderDestinationRows;
+
+    public LocationRow(Long id, String name, BigDecimal latitude, BigDecimal longitude, Set<DeliveryOrderRow> deliveryOrderOriginRows, Set<DeliveryOrderRow> deliveryOrderDestinationRows) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.deliveryOrderRows = deliveryOrderRows;
+        this.deliveryOrderOriginRows = deliveryOrderOriginRows;
+        this.deliveryOrderDestinationRows = deliveryOrderDestinationRows;
     }
 
-    public LocationRow() { }
+    public LocationRow() {
+
+    }
 
     public Long getId() {
         return id;
@@ -70,33 +78,52 @@ public class LocationRow {
         this.longitude = longitude;
     }
 
-    public Set<DeliveryOrderRow> getDeliveryOrderRows() {
-        return deliveryOrderRows;
+    public Set<DeliveryOrderRow> getDeliveryOrderOriginRows() {
+        return deliveryOrderOriginRows;
     }
 
-    public void setDeliveryOrderRows(Set<DeliveryOrderRow> deliveryOrderRows) {
-        this.deliveryOrderRows = deliveryOrderRows;
+    public void setDeliveryOrderOriginRows(Set<DeliveryOrderRow> deliveryOrderOriginRows) {
+        this.deliveryOrderOriginRows = deliveryOrderOriginRows;
+    }
+
+    public Set<DeliveryOrderRow> getDeliveryOrderDestinationRows() {
+        return deliveryOrderDestinationRows;
+    }
+
+    public void setDeliveryOrderDestinationRows(Set<DeliveryOrderRow> deliveryOrderDestinationRows) {
+        this.deliveryOrderDestinationRows = deliveryOrderDestinationRows;
     }
 
     public static LocationRow toLocationRow(Location location) {
 
-        final var deliveryOrderRows = location.getDeliveryOrderSet()
+        final var deliveryOrderOrigins = location.getDeliveryOrderOrigins()
+                .stream()
+                .map(DeliveryOrderRow::toDeliveryOrderRow)
+                .collect(Collectors.toSet());
+
+        final var deliveryOrderDestinations = location.getDeliveryOrderDestinations()
                 .stream()
                 .map(DeliveryOrderRow::toDeliveryOrderRow)
                 .collect(Collectors.toSet());
 
         return new LocationRow(
-                location.getLocationId(),
+                location.getId(),
                 location.getName(),
                 location.getLatitude(),
                 location.getLongitude(),
-                deliveryOrderRows
+                deliveryOrderOrigins,
+                deliveryOrderDestinations
         );
     }
 
     public Location toLocation() {
 
-        final var deliveryOrderSet = this.getDeliveryOrderRows()
+        final var deliveryOrderOrigins = this.getDeliveryOrderOriginRows()
+                .stream()
+                .map(DeliveryOrderRow::toDeliveryOrder)
+                .collect(Collectors.toSet());
+
+        final var deliveryOrderDestinations = this.getDeliveryOrderDestinationRows()
                 .stream()
                 .map(DeliveryOrderRow::toDeliveryOrder)
                 .collect(Collectors.toSet());
@@ -107,7 +134,8 @@ public class LocationRow {
                 this.getName(),
                 this.getLatitude(),
                 this.getLongitude(),
-                deliveryOrderSet
+                deliveryOrderOrigins,
+                deliveryOrderDestinations
         );
     }
 
@@ -116,12 +144,12 @@ public class LocationRow {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LocationRow that = (LocationRow) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(latitude, that.latitude) && Objects.equals(longitude, that.longitude) && Objects.equals(deliveryOrderRows, that.deliveryOrderRows);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(latitude, that.latitude) && Objects.equals(longitude, that.longitude) && Objects.equals(deliveryOrderOriginRows, that.deliveryOrderOriginRows);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, latitude, longitude, deliveryOrderRows);
+        return Objects.hash(id, name, latitude, longitude, deliveryOrderOriginRows);
     }
 
     @Override
@@ -131,7 +159,7 @@ public class LocationRow {
                 ", name='" + name + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
-                ", deliveryOrderRows=" + deliveryOrderRows +
+                ", deliveryOrderRows=" + deliveryOrderOriginRows +
                 '}';
     }
 }

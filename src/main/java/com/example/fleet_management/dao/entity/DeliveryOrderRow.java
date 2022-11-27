@@ -5,7 +5,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import static com.example.fleet_management.dao.entity.LocationRow.toLocationRow;
 import static com.example.fleet_management.dao.entity.TruckRow.toTruckRow;
@@ -16,6 +15,7 @@ public class DeliveryOrderRow {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne
@@ -23,12 +23,12 @@ public class DeliveryOrderRow {
     private TruckRow truckRow;
 
     @ManyToOne
-    @JoinColumn(name = "origin_location_id")
-    private LocationRow originLocation;
+    @JoinColumn(name = "origin_id")
+    private LocationRow origin;
 
     @ManyToOne
-    @JoinColumn(name = "delivery_location_id")
-    private LocationRow deliveryLocation;
+    @JoinColumn(name = "destination_id")
+    private LocationRow destination;
 
     @Column(name = "distance", nullable = false)
     private Float distance;
@@ -37,16 +37,18 @@ public class DeliveryOrderRow {
     @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 
-    public DeliveryOrderRow(Long id, TruckRow truckRow, LocationRow originLocation, LocationRow deliveryLocation, Float distance, LocalDateTime dateTime) {
+    public DeliveryOrderRow(Long id, TruckRow truckRow, LocationRow origin, LocationRow destination, Float distance, LocalDateTime dateTime) {
         this.id = id;
         this.truckRow = truckRow;
-        this.originLocation = originLocation;
-        this.deliveryLocation = deliveryLocation;
+        this.origin = origin;
+        this.destination = destination;
         this.distance = distance;
         this.dateTime = dateTime;
     }
 
-    public DeliveryOrderRow() { }
+    public DeliveryOrderRow() {
+
+    }
 
     public Long getId() {
         return id;
@@ -64,20 +66,20 @@ public class DeliveryOrderRow {
         this.truckRow = truckRow;
     }
 
-    public LocationRow getOriginLocation() {
-        return originLocation;
+    public LocationRow getOrigin() {
+        return origin;
     }
 
-    public void setOriginLocation(LocationRow originLocation) {
-        this.originLocation = originLocation;
+    public void setOrigin(LocationRow origin) {
+        this.origin = origin;
     }
 
-    public LocationRow getDeliveryLocation() {
-        return deliveryLocation;
+    public LocationRow getDestination() {
+        return destination;
     }
 
-    public void setDeliveryLocation(LocationRow deliveryLocation) {
-        this.deliveryLocation = deliveryLocation;
+    public void setDestination(LocationRow destination) {
+        this.destination = destination;
     }
 
     public Float getDistance() {
@@ -92,34 +94,38 @@ public class DeliveryOrderRow {
         return dateTime;
     }
 
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
     public static DeliveryOrderRow toDeliveryOrderRow(DeliveryOrder deliveryOrder) {
 
-        final var truckRow = toTruckRow(deliveryOrder.getTruck());
-        final var originLocationRow = toLocationRow(deliveryOrder.getOriginLocation());
-        final var deliveryLocationRow = toLocationRow(deliveryOrder.getDeliveryLocation());
+        final var truckRow = toTruckRow(deliveryOrder.truck());
+        final var originRow = toLocationRow(deliveryOrder.origin());
+        final var destinationRow = toLocationRow(deliveryOrder.destination());
 
         return new DeliveryOrderRow(
-                deliveryOrder.getId(),
+                deliveryOrder.id(),
                 truckRow,
-                originLocationRow,
-                deliveryLocationRow,
-                deliveryOrder.getDistance(),
-                deliveryOrder.getTimestamp()
+                originRow,
+                destinationRow,
+                deliveryOrder.distance(),
+                deliveryOrder.timestamp()
         );
     }
 
     public DeliveryOrder toDeliveryOrder() {
 
         final var truck = this.getTruckRow().toTruck();
-        final var originLocation = this.getOriginLocation().toLocation();
-        final var deliveryLocation = this.getDeliveryLocation().toLocation();
+        final var origin = this.getOrigin().toLocation();
+        final var destination = this.getDestination().toLocation();
 
         return new DeliveryOrder(
 
                 this.getId(),
                 truck,
-                originLocation,
-                deliveryLocation,
+                origin,
+                destination,
                 this.getDistance(),
                 this.getDateTime()
         );
@@ -129,13 +135,26 @@ public class DeliveryOrderRow {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         DeliveryOrderRow that = (DeliveryOrderRow) o;
-        return Objects.equals(id, that.id) && Objects.equals(truckRow, that.truckRow) && Objects.equals(originLocation, that.originLocation) && Objects.equals(deliveryLocation, that.deliveryLocation) && Objects.equals(distance, that.distance) && Objects.equals(dateTime, that.dateTime);
+
+        if (!id.equals(that.id)) return false;
+        if (!truckRow.equals(that.truckRow)) return false;
+        if (!origin.equals(that.origin)) return false;
+        if (!destination.equals(that.destination)) return false;
+        if (!distance.equals(that.distance)) return false;
+        return dateTime.equals(that.dateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, truckRow, originLocation, deliveryLocation, distance, dateTime);
+        int result = id.hashCode();
+        result = 31 * result + truckRow.hashCode();
+        result = 31 * result + origin.hashCode();
+        result = 31 * result + destination.hashCode();
+        result = 31 * result + distance.hashCode();
+        result = 31 * result + dateTime.hashCode();
+        return result;
     }
 
     @Override
@@ -143,8 +162,8 @@ public class DeliveryOrderRow {
         return "DeliveryOrderRow{" +
                 "id=" + id +
                 ", truckRow=" + truckRow +
-                ", originLocation=" + originLocation +
-                ", deliveryLocation=" + deliveryLocation +
+                ", origin=" + origin +
+                ", destination=" + destination +
                 ", distance=" + distance +
                 ", dateTime=" + dateTime +
                 '}';
