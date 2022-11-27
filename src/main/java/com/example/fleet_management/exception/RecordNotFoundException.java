@@ -1,8 +1,8 @@
 package com.example.fleet_management.exception;
 
-public class ResourceNotFoundException extends RuntimeException {
+public class RecordNotFoundException extends RuntimeException {
 
-    public ResourceNotFoundException(String attribute) {
+    public RecordNotFoundException(String attribute) {
         super(String.format("A %s with the provided ID was not found", attribute));
     }
 }

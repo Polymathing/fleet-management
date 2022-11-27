@@ -29,7 +29,7 @@ public class DeliveryOrderService {
         final var opDeliveryOrder = dao.findById(deliveryOrder.id());
 
         if(opDeliveryOrder.isPresent()) {
-            throw new ExistingRecordException("deliveryOrder");
+            throw new ExistingRecordException("deliveryOrder", "ID");
         }
 
         return dao.save(deliveryOrder);

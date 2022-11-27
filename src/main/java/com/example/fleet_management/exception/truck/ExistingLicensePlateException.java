@@ -1,4 +1,4 @@
-package com.example.fleet_management.exception;
+package com.example.fleet_management.exception.truck;
 
 public class ExistingLicensePlateException extends RuntimeException {
 

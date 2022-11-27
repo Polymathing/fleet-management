@@ -2,6 +2,8 @@ package com.example.fleet_management.web.controller;
 
 import com.example.fleet_management.domain.service.LocationService;
 import com.example.fleet_management.exception.ExistingRecordException;
+import com.example.fleet_management.exception.location.InvalidLatitudeException;
+import com.example.fleet_management.exception.location.InvalidLongitudeException;
 import com.example.fleet_management.web.dto.error.ErrorResponseBody;
 import com.example.fleet_management.web.dto.request.LocationRequestBody;
 import com.example.fleet_management.web.dto.response.LocationResponseBody;
@@ -51,12 +53,12 @@ public class LocationController {
 
             return ResponseEntity.ok(fromLocation(location));
         }
-        catch (ExistingRecordException e) {
+        catch (ExistingRecordException | InvalidLatitudeException | InvalidLongitudeException e) {
 
-            final var response = new ErrorResponseBody(e.getMessage());
+            final var error = new ErrorResponseBody(e.getMessage());
 
             return ResponseEntity.badRequest()
-                    .body(response);
+                    .body(error);
         }
     }
 

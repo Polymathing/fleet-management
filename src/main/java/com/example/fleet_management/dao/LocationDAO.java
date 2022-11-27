@@ -36,6 +36,13 @@ public class LocationDAO {
                 .map(LocationRow::toLocation);
     }
 
+    @Transactional(readOnly = true)
+    public Optional<Location> findByName(String name) {
+
+        return repository.findByName(name)
+                .map(LocationRow::toLocation);
+    }
+
     @Transactional
     public Location save(Location location) {
 
