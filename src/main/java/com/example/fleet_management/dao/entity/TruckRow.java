@@ -1,9 +1,12 @@
 package com.example.fleet_management.dao.entity;
 
+import com.example.fleet_management.domain.DeliveryOrder;
 import com.example.fleet_management.domain.Truck;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,7 +32,7 @@ public class TruckRow {
     @Column(name = "kilometers_per_liter", nullable = false)
     private Float kilometersPerLiter;
 
-    @OneToMany(mappedBy = "truckRow")
+    @OneToMany(mappedBy = "truckRow", orphanRemoval = true)
     private Set<DeliveryOrderRow> deliveryOrderRows;
 
     public TruckRow(Long id, String licensePlate, String manufacturer, String model, Float kilometersPerLiter, Set<DeliveryOrderRow> deliveryOrderRows) {
@@ -91,6 +94,15 @@ public class TruckRow {
         this.deliveryOrderRows = deliveryOrderRows;
     }
 
+    public boolean addDeliveryOrderRecord(DeliveryOrderRow deliveryOrderRow) {
+
+        if(this.deliveryOrderRows == null) {
+            this.deliveryOrderRows = new HashSet<>();
+        }
+
+        return this.deliveryOrderRows.add(deliveryOrderRow);
+    }
+
     public static TruckRow toTruckRow(Truck truck) {
 
         final var deliveryOrderRows = truck.getDeliveryOrderSet()
@@ -110,18 +122,13 @@ public class TruckRow {
 
     public Truck toTruck() {
 
-        final var deliveryOrderSet = this.getDeliveryOrderRows()
-                .stream()
-                .map(DeliveryOrderRow::toDeliveryOrder)
-                .collect(Collectors.toSet());
-
         return new Truck(
                 this.getId(),
                 this.getLicensePlate(),
                 this.getManufacturer(),
                 this.getModel(),
                 this.getKilometersPerLiter(),
-                deliveryOrderSet
+                Collections.emptySet()
         );
     }
 

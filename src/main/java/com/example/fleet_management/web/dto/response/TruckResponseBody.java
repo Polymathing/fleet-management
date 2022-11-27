@@ -6,22 +6,16 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public record TruckResponseBody(Long id, String licensePlate, String manufacturer, String model, Float kilometersPerLiter, Set<DeliveryOrderResponseBody> deliveryOrders) {
+public record TruckResponseBody(Long id, String licensePlate, String manufacturer, String model, Float kilometersPerLiter) {
 
     public static TruckResponseBody fromTruck(Truck truck) {
-
-        final var deliveryOrders = truck.getDeliveryOrderSet()
-                .stream()
-                .map(DeliveryOrderResponseBody::fromDeliveryOrder)
-                .collect(Collectors.toSet());
 
         return new TruckResponseBody(
                 truck.getId(),
                 truck.getLicensePlate(),
                 truck.getManufacturer(),
                 truck.getModel(),
-                truck.getKilometersPerLiter(),
-                deliveryOrders
+                truck.getKilometersPerLiter()
         );
     }
 
@@ -29,13 +23,24 @@ public record TruckResponseBody(Long id, String licensePlate, String manufacture
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         TruckResponseBody that = (TruckResponseBody) o;
-        return Objects.equals(id, that.id) && Objects.equals(licensePlate, that.licensePlate) && Objects.equals(manufacturer, that.manufacturer) && Objects.equals(model, that.model) && Objects.equals(kilometersPerLiter, that.kilometersPerLiter) && Objects.equals(deliveryOrders, that.deliveryOrders);
+
+        if (!id.equals(that.id)) return false;
+        if (!licensePlate.equals(that.licensePlate)) return false;
+        if (!manufacturer.equals(that.manufacturer)) return false;
+        if (!model.equals(that.model)) return false;
+        return kilometersPerLiter.equals(that.kilometersPerLiter);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, licensePlate, manufacturer, model, kilometersPerLiter, deliveryOrders);
+        int result = id.hashCode();
+        result = 31 * result + licensePlate.hashCode();
+        result = 31 * result + manufacturer.hashCode();
+        result = 31 * result + model.hashCode();
+        result = 31 * result + kilometersPerLiter.hashCode();
+        return result;
     }
 
     @Override
@@ -46,7 +51,6 @@ public record TruckResponseBody(Long id, String licensePlate, String manufacture
                 ", manufacturer='" + manufacturer + '\'' +
                 ", model='" + model + '\'' +
                 ", kilometersPerLiter=" + kilometersPerLiter +
-                ", deliveryOrders=" + deliveryOrders +
                 '}';
     }
 }

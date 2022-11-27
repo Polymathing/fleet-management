@@ -5,7 +5,7 @@ import com.example.fleet_management.web.dto.response.LocationResponseBody;
 
 import java.time.LocalDateTime;
 
-public record DeliveryOrderRequestBody(Long id, TruckRequestBody truck, LocationRequestBody originLocation, LocationResponseBody deliveryLocation, Float distance, LocalDateTime timestamp) {
+public record DeliveryOrderRequestBody(Long id, TruckRequestBody truck, LocationRequestBody originLocation, LocationResponseBody deliveryLocation, Double distance, LocalDateTime timestamp) {
 
 
     public DeliveryOrder toDeliveryOrder() {
@@ -15,8 +15,8 @@ public record DeliveryOrderRequestBody(Long id, TruckRequestBody truck, Location
                 null,
                 null,
                 null,
-                this.distance,
-                this.timestamp
+                null,
+                null
         );
     }
 
@@ -51,10 +51,10 @@ public record DeliveryOrderRequestBody(Long id, TruckRequestBody truck, Location
         return "DeliveryOrderRequestBody{" +
                 "id=" + id +
                 ", truck=" + truck +
-                ", originLocation=" + originLocation +
-                ", destination=" + deliveryLocation +
+                ", origin=" + originLocation +
+                ", deliveryLocation=" + deliveryLocation +
                 ", distance=" + distance +
-                ", timestamp=" + timestamp +
+                ", createdAt=" + timestamp +
                 '}';
     }
 }

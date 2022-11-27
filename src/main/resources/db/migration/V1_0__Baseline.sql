@@ -13,14 +13,14 @@ CREATE TABLE IF NOT EXISTS location
     "id"        BIGINT NOT NULL,
     "name"      VARCHAR(255) NOT NULL,
     "latitude"  DECIMAL(8,6) NOT NULL,
-    "longitude" DECIMAL(9,6) NOT NULL,
+    "longitude" DECIMAL(8,6) NOT NULL,
     PRIMARY KEY (id)
 );
 
 
 CREATE TABLE IF NOT EXISTS delivery_order
 (
-    "id"                   BIGINT NOT NULL,
+    "id"                   BIGINT AUTO_INCREMENT NOT NULL,
     "truck_id"             BIGINT NOT NULL,
     "origin_id"   BIGINT NOT NULL,
     "destination_id" BIGINT NOT NULL,

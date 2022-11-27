@@ -2,7 +2,7 @@ package com.example.fleet_management.domain;
 
 import java.time.LocalDateTime;
 
-public record DeliveryOrder(Long id, Truck truck, Location origin, Location destination, Float distance,
+public record DeliveryOrder(Long id, Truck truck, Location origin, Location destination, Double distance,
                             LocalDateTime timestamp) {
 
     @Override
@@ -28,7 +28,7 @@ public record DeliveryOrder(Long id, Truck truck, Location origin, Location dest
                 ", origin=" + origin +
                 ", destination=" + destination +
                 ", distance=" + distance +
-                ", timestamp=" + timestamp +
+                ", createdAt=" + timestamp +
                 '}';
     }
 }

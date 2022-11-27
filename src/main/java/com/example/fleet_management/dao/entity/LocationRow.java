@@ -1,10 +1,13 @@
 package com.example.fleet_management.dao.entity;
 
+import com.example.fleet_management.domain.DeliveryOrder;
 import com.example.fleet_management.domain.Location;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,10 +30,10 @@ public class LocationRow {
     @Column(name = "longitude", nullable = false, precision = 9, scale = 6)
     private BigDecimal longitude;
 
-    @OneToMany(mappedBy = "origin")
+    @OneToMany(mappedBy = "origin", orphanRemoval = true)
     private Set<DeliveryOrderRow> deliveryOrderOriginRows;
 
-    @OneToMany(mappedBy = "destination")
+    @OneToMany(mappedBy = "destination", orphanRemoval = true)
     private Set<DeliveryOrderRow> deliveryOrderDestinationRows;
 
     public LocationRow(Long id, String name, BigDecimal latitude, BigDecimal longitude, Set<DeliveryOrderRow> deliveryOrderOriginRows, Set<DeliveryOrderRow> deliveryOrderDestinationRows) {
@@ -94,6 +97,24 @@ public class LocationRow {
         this.deliveryOrderDestinationRows = deliveryOrderDestinationRows;
     }
 
+    public boolean addDeliveryOrderOriginRow(DeliveryOrderRow deliveryOrderRow) {
+
+        if(this.deliveryOrderOriginRows == null) {
+            this.deliveryOrderOriginRows = new HashSet<>();
+        }
+
+        return deliveryOrderOriginRows.add(deliveryOrderRow);
+    }
+
+    public boolean addDeliveryOrderDestinationRow(DeliveryOrderRow deliveryOrderRow) {
+
+        if(this.deliveryOrderDestinationRows == null) {
+            this.deliveryOrderDestinationRows = new HashSet<>();
+        }
+
+        return deliveryOrderDestinationRows.add(deliveryOrderRow);
+    }
+
     public static LocationRow toLocationRow(Location location) {
 
         final var deliveryOrderOrigins = location.getDeliveryOrderOrigins()
@@ -118,24 +139,14 @@ public class LocationRow {
 
     public Location toLocation() {
 
-        final var deliveryOrderOrigins = this.getDeliveryOrderOriginRows()
-                .stream()
-                .map(DeliveryOrderRow::toDeliveryOrder)
-                .collect(Collectors.toSet());
-
-        final var deliveryOrderDestinations = this.getDeliveryOrderDestinationRows()
-                .stream()
-                .map(DeliveryOrderRow::toDeliveryOrder)
-                .collect(Collectors.toSet());
-
         return new Location(
 
                 this.getId(),
                 this.getName(),
                 this.getLatitude(),
                 this.getLongitude(),
-                deliveryOrderOrigins,
-                deliveryOrderDestinations
+                Collections.emptySet(),
+                Collections.emptySet()
         );
     }
 
@@ -144,12 +155,12 @@ public class LocationRow {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LocationRow that = (LocationRow) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(latitude, that.latitude) && Objects.equals(longitude, that.longitude) && Objects.equals(deliveryOrderOriginRows, that.deliveryOrderOriginRows);
+        return id.equals(that.id) && name.equals(that.name) && latitude.equals(that.latitude) && longitude.equals(that.longitude) && Objects.equals(deliveryOrderOriginRows, that.deliveryOrderOriginRows) && Objects.equals(deliveryOrderDestinationRows, that.deliveryOrderDestinationRows);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, latitude, longitude, deliveryOrderOriginRows);
+        return Objects.hash(id, name, latitude, longitude);
     }
 
     @Override
@@ -159,7 +170,8 @@ public class LocationRow {
                 ", name='" + name + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
-                ", deliveryOrderRows=" + deliveryOrderOriginRows +
+                ", deliveryOrderOriginRows=" + deliveryOrderOriginRows +
+                ", deliveryOrderDestinationRows=" + deliveryOrderDestinationRows +
                 '}';
     }
 }

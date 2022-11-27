@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import static com.example.fleet_management.dao.entity.LocationRow.toLocationRow;
 import static com.example.fleet_management.dao.entity.TruckRow.toTruckRow;
@@ -23,21 +24,21 @@ public class DeliveryOrderRow {
     private TruckRow truckRow;
 
     @ManyToOne
-    @JoinColumn(name = "origin_id")
+    @JoinColumn(name = "origin_id", updatable = false)
     private LocationRow origin;
 
     @ManyToOne
-    @JoinColumn(name = "destination_id")
+    @JoinColumn(name = "destination_id", updatable = false)
     private LocationRow destination;
 
     @Column(name = "distance", nullable = false)
-    private Float distance;
+    private Double distance;
 
     @CreationTimestamp
-    @Column(name = "date_time", nullable = false)
+    @Column(name = "date_time", nullable = false, updatable = false)
     private LocalDateTime dateTime;
 
-    public DeliveryOrderRow(Long id, TruckRow truckRow, LocationRow origin, LocationRow destination, Float distance, LocalDateTime dateTime) {
+    public DeliveryOrderRow(Long id, TruckRow truckRow, LocationRow origin, LocationRow destination, Double distance, LocalDateTime dateTime) {
         this.id = id;
         this.truckRow = truckRow;
         this.origin = origin;
@@ -82,11 +83,11 @@ public class DeliveryOrderRow {
         this.destination = destination;
     }
 
-    public Float getDistance() {
+    public Double getDistance() {
         return distance;
     }
 
-    public void setDistance(Float distance) {
+    public void setDistance(Double distance) {
         this.distance = distance;
     }
 
@@ -131,29 +132,23 @@ public class DeliveryOrderRow {
         );
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         DeliveryOrderRow that = (DeliveryOrderRow) o;
-
-        if (!id.equals(that.id)) return false;
-        if (!truckRow.equals(that.truckRow)) return false;
-        if (!origin.equals(that.origin)) return false;
-        if (!destination.equals(that.destination)) return false;
-        if (!distance.equals(that.distance)) return false;
-        return dateTime.equals(that.dateTime);
+        return Objects.equals(id, that.id) && truckRow.equals(that.truckRow) && origin.equals(that.origin) && destination.equals(that.destination) && distance.equals(that.distance) && dateTime.equals(that.dateTime);
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + truckRow.hashCode();
-        result = 31 * result + origin.hashCode();
-        result = 31 * result + destination.hashCode();
-        result = 31 * result + distance.hashCode();
-        result = 31 * result + dateTime.hashCode();
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (truckRow != null ? truckRow.hashCode() : 0);
+        result = 31 * result + (origin != null ? origin.hashCode() : 0);
+        result = 31 * result + (destination != null ? destination.hashCode() : 0);
+        result = 31 * result + (distance != null ? distance.hashCode() : 0);
+        result = 31 * result + (dateTime != null ? dateTime.hashCode() : 0);
         return result;
     }
 

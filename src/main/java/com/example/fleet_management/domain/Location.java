@@ -1,6 +1,7 @@
 package com.example.fleet_management.domain;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.Set;
 
 public class Location {
@@ -20,6 +21,7 @@ public class Location {
         this.deliveryOrderOrigins = deliveryOrderOrigins;
         this.deliveryOrderDestinations = deliveryOrderDestinations;
     }
+
     public Long getId() {
         return id;
     }
@@ -52,26 +54,13 @@ public class Location {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Location location = (Location) o;
-
-        if (!id.equals(location.id)) return false;
-        if (!name.equals(location.name)) return false;
-        if (!latitude.equals(location.latitude)) return false;
-        if (!longitude.equals(location.longitude)) return false;
-        if (!deliveryOrderOrigins.equals(location.deliveryOrderOrigins)) return false;
-        return deliveryOrderDestinations.equals(location.deliveryOrderDestinations);
+        return id.equals(location.id) && name.equals(location.name) && latitude.equals(location.latitude) && longitude.equals(location.longitude) && deliveryOrderOrigins.equals(location.deliveryOrderOrigins) && deliveryOrderDestinations.equals(location.deliveryOrderDestinations);
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + latitude.hashCode();
-        result = 31 * result + longitude.hashCode();
-        result = 31 * result + deliveryOrderOrigins.hashCode();
-        result = 31 * result + deliveryOrderDestinations.hashCode();
-        return result;
+        return Objects.hash(id, name, latitude, longitude, deliveryOrderOrigins, deliveryOrderDestinations);
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.example.fleet_management.domain.DeliveryOrder;
 
 import java.time.LocalDateTime;
 
-public record DeliveryOrderResponseBody(Long id, TruckResponseBody truck, LocationResponseBody originLocation, LocationResponseBody destination, Float distance, LocalDateTime timestamp) {
+public record DeliveryOrderResponseBody(Long id, TruckResponseBody truck, LocationResponseBody origin, LocationResponseBody destination, Double distanceInKM, LocalDateTime createdAt) {
 
     public static DeliveryOrderResponseBody fromDeliveryOrder(DeliveryOrder deliveryOrder) {
 
@@ -31,20 +31,20 @@ public record DeliveryOrderResponseBody(Long id, TruckResponseBody truck, Locati
 
         if (!id.equals(that.id)) return false;
         if (!truck.equals(that.truck)) return false;
-        if (!originLocation.equals(that.originLocation)) return false;
+        if (!origin.equals(that.origin)) return false;
         if (!destination.equals(that.destination)) return false;
-        if (!distance.equals(that.distance)) return false;
-        return timestamp.equals(that.timestamp);
+        if (!distanceInKM.equals(that.distanceInKM)) return false;
+        return createdAt.equals(that.createdAt);
     }
 
     @Override
     public int hashCode() {
         int result = id.hashCode();
         result = 31 * result + truck.hashCode();
-        result = 31 * result + originLocation.hashCode();
+        result = 31 * result + origin.hashCode();
         result = 31 * result + destination.hashCode();
-        result = 31 * result + distance.hashCode();
-        result = 31 * result + timestamp.hashCode();
+        result = 31 * result + distanceInKM.hashCode();
+        result = 31 * result + createdAt.hashCode();
         return result;
     }
 
@@ -53,10 +53,10 @@ public record DeliveryOrderResponseBody(Long id, TruckResponseBody truck, Locati
         return "DeliveryOrderResponseBody{" +
                 "id=" + id +
                 ", truck=" + truck +
-                ", originLocation=" + originLocation +
+                ", origin=" + origin +
                 ", destination=" + destination +
-                ", distance=" + distance +
-                ", timestamp=" + timestamp +
+                ", distanceInKM=" + distanceInKM +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }
