@@ -1,8 +1,8 @@
 package com.example.fleet_management.web.controller;
 
 import com.example.fleet_management.domain.service.TruckService;
-import com.example.fleet_management.exception.truck.ExistingLicensePlateException;
 import com.example.fleet_management.exception.ExistingRecordException;
+import com.example.fleet_management.exception.truck.ExistingLicensePlateException;
 import com.example.fleet_management.web.dto.error.ErrorResponseBody;
 import com.example.fleet_management.web.dto.request.TruckRequestBody;
 import com.example.fleet_management.web.dto.response.TruckResponseBody;

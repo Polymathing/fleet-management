@@ -1,10 +1,8 @@
 package com.example.fleet_management.web.dto.request;
 
 import com.example.fleet_management.domain.Truck;
-import com.example.fleet_management.web.dto.response.TruckResponseBody;
 
 import java.util.Collections;
-import java.util.Objects;
 
 public record TruckRequestBody(Long id, String licensePlate, String manufacturer, String model, Float kilometersPerLiter) {
 

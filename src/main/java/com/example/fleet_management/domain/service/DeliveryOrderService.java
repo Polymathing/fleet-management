@@ -1,7 +1,6 @@
 package com.example.fleet_management.domain.service;
 
 import com.example.fleet_management.dao.DeliveryOrderDAO;
-import com.example.fleet_management.dao.LocationDAO;
 import com.example.fleet_management.domain.DeliveryOrder;
 import com.example.fleet_management.exception.EqualValuesException;
 import org.springframework.stereotype.Service;
@@ -14,11 +13,9 @@ import java.util.Set;
 public class DeliveryOrderService {
 
     private final DeliveryOrderDAO dao;
-    private final LocationDAO locationDAO;
 
-    public DeliveryOrderService(DeliveryOrderDAO dao, LocationDAO locationDAO) {
+    public DeliveryOrderService(DeliveryOrderDAO dao) {
         this.dao = dao;
-        this.locationDAO = locationDAO;
     }
 
     public Set<DeliveryOrder> findAll() { return dao.findAll(); }

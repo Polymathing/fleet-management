@@ -1,6 +1,5 @@
 package com.example.fleet_management.dao.entity;
 
-import com.example.fleet_management.domain.DeliveryOrder;
 import com.example.fleet_management.domain.Location;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -45,9 +44,7 @@ public class LocationRow {
         this.deliveryOrderDestinationRows = deliveryOrderDestinationRows;
     }
 
-    public LocationRow() {
-
-    }
+    public LocationRow() { }
 
     public Long getId() {
         return id;

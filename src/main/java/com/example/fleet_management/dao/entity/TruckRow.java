@@ -1,6 +1,5 @@
 package com.example.fleet_management.dao.entity;
 
-import com.example.fleet_management.domain.DeliveryOrder;
 import com.example.fleet_management.domain.Truck;
 import org.hibernate.annotations.NaturalId;
 

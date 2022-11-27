@@ -2,10 +2,6 @@ package com.example.fleet_management.web.dto.response;
 
 import com.example.fleet_management.domain.Truck;
 
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 public record TruckResponseBody(Long id, String licensePlate, String manufacturer, String model, Float kilometersPerLiter) {
 
     public static TruckResponseBody fromTruck(Truck truck) {

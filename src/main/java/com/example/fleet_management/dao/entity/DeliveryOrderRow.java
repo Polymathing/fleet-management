@@ -16,11 +16,11 @@ public class DeliveryOrderRow {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "truck_id")
+    @JoinColumn(name = "truck_id", updatable = false)
     private TruckRow truckRow;
 
     @ManyToOne
@@ -31,7 +31,7 @@ public class DeliveryOrderRow {
     @JoinColumn(name = "destination_id", updatable = false)
     private LocationRow destination;
 
-    @Column(name = "distance", nullable = false)
+    @Column(name = "distance", nullable = false, updatable = false)
     private Double distance;
 
     @CreationTimestamp
@@ -47,9 +47,7 @@ public class DeliveryOrderRow {
         this.dateTime = dateTime;
     }
 
-    public DeliveryOrderRow() {
-
-    }
+    public DeliveryOrderRow() { }
 
     public Long getId() {
         return id;

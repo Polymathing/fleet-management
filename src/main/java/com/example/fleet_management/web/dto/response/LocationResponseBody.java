@@ -3,8 +3,6 @@ package com.example.fleet_management.web.dto.response;
 import com.example.fleet_management.domain.Location;
 
 import java.math.BigDecimal;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public record LocationResponseBody(Long id, String name, BigDecimal latitude, BigDecimal longitude) {
 

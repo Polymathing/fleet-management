@@ -2,8 +2,8 @@ package com.example.fleet_management.domain.service;
 
 import com.example.fleet_management.dao.TruckDAO;
 import com.example.fleet_management.domain.Truck;
-import com.example.fleet_management.exception.truck.ExistingLicensePlateException;
 import com.example.fleet_management.exception.ExistingRecordException;
+import com.example.fleet_management.exception.truck.ExistingLicensePlateException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

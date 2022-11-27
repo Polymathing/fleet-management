@@ -1,6 +1,5 @@
 package com.example.fleet_management.dao;
 
-import com.example.fleet_management.dao.entity.DeliveryOrderRow;
 import com.example.fleet_management.dao.entity.TruckRow;
 import com.example.fleet_management.dao.repository.TruckRepository;
 import com.example.fleet_management.domain.Truck;
