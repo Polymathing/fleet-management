@@ -43,10 +43,10 @@ public class LocationService {
 
     private void validateNewLocation(Location location) {
 
-        final var locationIdExists = dao.findById(location.getId()).isPresent();
-        final var locationNameExists = dao.findByName(location.getName()).isPresent();
-        final var latitudeIsValid = latitudeValidator.isLatitudeValid(location.getLatitude().toString());
-        final var longitudeIsValid = longitudeValidator.isLatitudeValid(location.getLongitude().toString());
+        final var locationIdExists = dao.findById(location.id()).isPresent();
+        final var locationNameExists = dao.findByName(location.name()).isPresent();
+        final var latitudeIsValid = latitudeValidator.isLatitudeValid(location.latitude().toString());
+        final var longitudeIsValid = longitudeValidator.isLatitudeValid(location.longitude().toString());
 
         if(locationIdExists) {
             throw new ExistingRecordException("location", "ID");
@@ -55,10 +55,10 @@ public class LocationService {
             throw new ExistingRecordException("location", "name");
         }
         else if(!latitudeIsValid) {
-            throw new InvalidLatitudeException(location.getLatitude().toString());
+            throw new InvalidLatitudeException(location.latitude().toString());
         }
         else if(!longitudeIsValid) {
-            throw new InvalidLongitudeException(location.getLongitude().toString());
+            throw new InvalidLongitudeException(location.longitude().toString());
         }
     }
 

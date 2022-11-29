@@ -104,17 +104,17 @@ public class TruckRow {
 
     public static TruckRow toTruckRow(Truck truck) {
 
-        final var deliveryOrderRows = truck.getDeliveryOrderSet()
+        final var deliveryOrderRows = truck.deliveryOrderSet()
                 .stream()
                 .map(DeliveryOrderRow::toDeliveryOrderRow)
                 .collect(Collectors.toSet());
 
         return new TruckRow(
-                truck.getId(),
-                truck.getLicensePlate(),
-                truck.getManufacturer(),
-                truck.getModel(),
-                truck.getKilometersPerLiter(),
+                truck.id(),
+                truck.licensePlate(),
+                truck.manufacturer(),
+                truck.model(),
+                truck.kilometersPerLiter(),
                 deliveryOrderRows
         );
     }

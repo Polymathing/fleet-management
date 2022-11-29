@@ -37,14 +37,14 @@ public class TruckService {
 
     private void validateNewTruck(Truck truck) {
 
-        final var opTruckById = dao.findById(truck.getId());
-        final var opTruckByLicensePlate = dao.findByLicensePlate(truck.getLicensePlate());
+        final var opTruckById = dao.findById(truck.id());
+        final var opTruckByLicensePlate = dao.findByLicensePlate(truck.licensePlate());
 
         if(opTruckById.isPresent()) {
             throw new ExistingRecordException("truck", "ID");
         }
         else if(opTruckByLicensePlate.isPresent()) {
-            throw new ExistingLicensePlateException(truck.getLicensePlate());
+            throw new ExistingLicensePlateException(truck.licensePlate());
         }
     }
 

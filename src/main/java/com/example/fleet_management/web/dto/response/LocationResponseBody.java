@@ -10,10 +10,10 @@ public record LocationResponseBody(Long id, String name, BigDecimal latitude, Bi
 
 
         return new LocationResponseBody(
-                location.getId(),
-                location.getName(),
-                location.getLatitude(),
-                location.getLongitude()
+                location.id(),
+                location.name(),
+                location.latitude(),
+                location.longitude()
         );
     }
 

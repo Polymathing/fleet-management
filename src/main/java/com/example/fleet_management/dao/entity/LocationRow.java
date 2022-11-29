@@ -114,21 +114,21 @@ public class LocationRow {
 
     public static LocationRow toLocationRow(Location location) {
 
-        final var deliveryOrderOrigins = location.getDeliveryOrderOrigins()
+        final var deliveryOrderOrigins = location.deliveryOrderOrigins()
                 .stream()
                 .map(DeliveryOrderRow::toDeliveryOrderRow)
                 .collect(Collectors.toSet());
 
-        final var deliveryOrderDestinations = location.getDeliveryOrderDestinations()
+        final var deliveryOrderDestinations = location.deliveryOrderDestinations()
                 .stream()
                 .map(DeliveryOrderRow::toDeliveryOrderRow)
                 .collect(Collectors.toSet());
 
         return new LocationRow(
-                location.getId(),
-                location.getName(),
-                location.getLatitude(),
-                location.getLongitude(),
+                location.id(),
+                location.name(),
+                location.latitude(),
+                location.longitude(),
                 deliveryOrderOrigins,
                 deliveryOrderDestinations
         );
