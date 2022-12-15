@@ -14,16 +14,4 @@ public record Truck(Long id, String licensePlate, String manufacturer,
         Truck truck = (Truck) o;
         return Objects.equals(id, truck.id) && Objects.equals(licensePlate, truck.licensePlate) && Objects.equals(manufacturer, truck.manufacturer) && Objects.equals(model, truck.model) && Objects.equals(kilometersPerLiter, truck.kilometersPerLiter) && Objects.equals(deliveryOrderSet, truck.deliveryOrderSet);
     }
-
-    @Override
-    public String toString() {
-        return "Truck{" +
-                "truckId=" + id +
-                ", licensePlate='" + licensePlate + '\'' +
-                ", manufacturer='" + manufacturer + '\'' +
-                ", model='" + model + '\'' +
-                ", kilometersPerLiter=" + kilometersPerLiter +
-                ", deliveryOrderSet=" + deliveryOrderSet +
-                '}';
-    }
 }
