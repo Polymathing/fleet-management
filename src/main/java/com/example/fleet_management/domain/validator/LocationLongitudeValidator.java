@@ -9,7 +9,7 @@ public class LocationLongitudeValidator {
 
     public static final Pattern LONGITUDE_PATTERN = Pattern.compile("^-?[0-9]{2}.[0-9]{6}$") ;
 
-    public boolean isLatitudeValid(String input) {
+    public boolean isLongitudeValid(String input) {
 
         return LONGITUDE_PATTERN
                 .matcher(input)

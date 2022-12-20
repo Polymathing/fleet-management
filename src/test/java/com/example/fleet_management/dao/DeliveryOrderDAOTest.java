@@ -52,11 +52,11 @@ public class DeliveryOrderDAOTest {
     @BeforeEach
     void setUp() {
 
+        this.dao = new DeliveryOrderDAO(repository, locationRepository, truckRepository);
+
         this.truckRow = new TruckRow(1L, "123", "Foo", "Foo", 1F, new HashSet<>());
         this.originRow = new LocationRow(1L, "Foo Origin", BigDecimal.valueOf(1), BigDecimal.valueOf(2), Collections.emptySet(), Collections.emptySet());
         this.destinationRow = new LocationRow(2L, "Foo Destination", BigDecimal.valueOf(2), BigDecimal.valueOf(3), Collections.emptySet(), Collections.emptySet());
-
-        this.dao = new DeliveryOrderDAO(repository, locationRepository, truckRepository);
 
         this.deliveryOrderRow = new DeliveryOrderRow(
                 1L,

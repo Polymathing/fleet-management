@@ -46,7 +46,7 @@ public class LocationService {
         final var locationIdExists = dao.findById(location.id()).isPresent();
         final var locationNameExists = dao.findByName(location.name()).isPresent();
         final var latitudeIsValid = latitudeValidator.isLatitudeValid(location.latitude().toString());
-        final var longitudeIsValid = longitudeValidator.isLatitudeValid(location.longitude().toString());
+        final var longitudeIsValid = longitudeValidator.isLongitudeValid(location.longitude().toString());
 
         if(locationIdExists) {
             throw new ExistingRecordException("location", "ID");

@@ -3,7 +3,6 @@ package com.example.fleet_management.domain.service;
 import com.example.fleet_management.dao.TruckDAO;
 import com.example.fleet_management.domain.Truck;
 import com.example.fleet_management.exception.ExistingRecordException;
-import com.example.fleet_management.exception.truck.ExistingLicensePlateException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -44,7 +43,7 @@ public class TruckService {
             throw new ExistingRecordException("truck", "ID");
         }
         else if(opTruckByLicensePlate.isPresent()) {
-            throw new ExistingLicensePlateException(truck.licensePlate());
+            throw new ExistingRecordException("truck", "License Plate");
         }
     }
 

@@ -5,7 +5,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import static com.example.fleet_management.dao.entity.LocationRow.toLocationRow;
 import static com.example.fleet_management.dao.entity.TruckRow.toTruckRow;
@@ -47,7 +46,8 @@ public class DeliveryOrderRow {
         this.dateTime = dateTime;
     }
 
-    public DeliveryOrderRow() { }
+    public DeliveryOrderRow() {
+    }
 
     public Long getId() {
         return id;
