@@ -1,13 +1,10 @@
-package com.example.fleet_management.service;
+package com.example.fleet_management.domain.service;
 
 import com.example.fleet_management.dao.LocationDAO;
 import com.example.fleet_management.domain.Location;
-import com.example.fleet_management.domain.service.LocationService;
-import com.example.fleet_management.domain.validator.LocationLatitudeValidator;
-import com.example.fleet_management.domain.validator.LocationLongitudeValidator;
+import com.example.fleet_management.domain.validator.LocationGeoCoordinateValidator;
 import com.example.fleet_management.exception.ExistingRecordException;
-import com.example.fleet_management.exception.location.InvalidLatitudeException;
-import com.example.fleet_management.exception.location.InvalidLongitudeException;
+import com.example.fleet_management.exception.location.InvalidCoordinateException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,11 +29,8 @@ public class LocationServiceTest {
 
     @Mock
     private LocationDAO dao;
-
     @Mock
-    private LocationLongitudeValidator longitudeValidator;
-    @Mock
-    private LocationLatitudeValidator latitudeValidator;
+    private LocationGeoCoordinateValidator coordinateValidator;
 
     private Location location;
     private Set<Location> locations;
@@ -44,7 +38,7 @@ public class LocationServiceTest {
     @BeforeEach
     void setUp() {
 
-        this.service = new LocationService(this.dao, latitudeValidator, longitudeValidator);
+        this.service = new LocationService(this.dao, coordinateValidator);
 
         this.location = new Location(1L, "Foo", BigDecimal.valueOf(1), BigDecimal.valueOf(2), Collections.emptySet(), Collections.emptySet());
         this.locations = new HashSet<>();
@@ -117,9 +111,9 @@ public class LocationServiceTest {
 
         when(dao.findById(anyLong())).thenReturn(Optional.empty());
         when(dao.findByName(anyString())).thenReturn(Optional.empty());
-        when(latitudeValidator.isLatitudeValid(anyString())).thenReturn(false);
+        when(coordinateValidator.isCoordinateValid(anyString())).thenReturn(false);
 
-        assertThatExceptionOfType(InvalidLatitudeException.class)
+        assertThatExceptionOfType(InvalidCoordinateException.class)
                 .isThrownBy(() -> service.save(location))
                 .withMessage("Latitude '1' is invalid. Pattern must be DECIMAL{8,6}, e.g. '12.345678'");
     }
@@ -129,12 +123,12 @@ public class LocationServiceTest {
 
         when(dao.findById(anyLong())).thenReturn(Optional.empty());
         when(dao.findByName(anyString())).thenReturn(Optional.empty());
-        when(latitudeValidator.isLatitudeValid(anyString())).thenReturn(true);
-        when(longitudeValidator.isLongitudeValid(anyString())).thenReturn(false);
+        when(coordinateValidator.isCoordinateValid(location.latitude().toString())).thenReturn(true);
+        when(coordinateValidator.isCoordinateValid(location.longitude().toString())).thenReturn(false);
 
-        assertThatExceptionOfType(InvalidLongitudeException.class)
+        assertThatExceptionOfType(InvalidCoordinateException.class)
                 .isThrownBy(() -> service.save(location))
-                .withMessage("Longitude '2' is invalid. Pattern must be DECIMAL{9,6}, e.g. '123.456789'");
+                .withMessage("Longitude '2' is invalid. Pattern must be DECIMAL{8,6}, e.g. '12.345678'");
     }
 
     @Test
@@ -142,8 +136,8 @@ public class LocationServiceTest {
 
         when(dao.findById(anyLong())).thenReturn(Optional.empty());
         when(dao.findByName(anyString())).thenReturn(Optional.empty());
-        when(latitudeValidator.isLatitudeValid(anyString())).thenReturn(true);
-        when(longitudeValidator.isLongitudeValid(anyString())).thenReturn(true);
+        when(coordinateValidator.isCoordinateValid(anyString())).thenReturn(true);
+        when(coordinateValidator.isCoordinateValid(anyString())).thenReturn(true);
         when(dao.save(any(Location.class))).thenReturn(location);
 
         final var response = service.save(location);

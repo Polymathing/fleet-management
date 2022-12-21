@@ -1,4 +1,4 @@
-package com.example.fleet_management.service;
+package com.example.fleet_management.domain.service;
 
 import com.example.fleet_management.dao.DeliveryOrderDAO;
 import com.example.fleet_management.domain.DeliveryOrder;
