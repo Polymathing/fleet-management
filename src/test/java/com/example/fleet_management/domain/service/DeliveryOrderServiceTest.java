@@ -4,7 +4,6 @@ import com.example.fleet_management.dao.DeliveryOrderDAO;
 import com.example.fleet_management.domain.DeliveryOrder;
 import com.example.fleet_management.domain.Location;
 import com.example.fleet_management.domain.Truck;
-import com.example.fleet_management.domain.service.DeliveryOrderService;
 import com.example.fleet_management.exception.EqualValuesException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -106,7 +105,7 @@ public class DeliveryOrderServiceTest {
 
         assertThatExceptionOfType(EqualValuesException.class)
                 .isThrownBy(() -> service.save(deliveryOrder.truck().licensePlate(), 1L, 1L))
-                .withMessage("Origin and Destination cannot be the same.");
+                .withMessage("Origin and Destination cannot be the same");
     }
 
     @Test

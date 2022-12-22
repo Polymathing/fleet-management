@@ -3,7 +3,6 @@ package com.example.fleet_management.domain.service;
 
 import com.example.fleet_management.dao.TruckDAO;
 import com.example.fleet_management.domain.Truck;
-import com.example.fleet_management.domain.service.TruckService;
 import com.example.fleet_management.exception.ExistingRecordException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.swing.text.html.Option;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
