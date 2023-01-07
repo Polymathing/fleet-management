@@ -57,9 +57,9 @@ public class LocationDAO {
         return repository.findById(id)
                 .map(dbRecord -> {
 
-                    dbRecord.setName(location.getName());
-                    dbRecord.setLatitude(location.getLatitude());
-                    dbRecord.setLongitude(location.getLongitude());
+                    dbRecord.setName(location.name());
+                    dbRecord.setLatitude(location.latitude());
+                    dbRecord.setLongitude(location.longitude());
 
                     return dbRecord;
                 }).map(LocationRow::toLocation);

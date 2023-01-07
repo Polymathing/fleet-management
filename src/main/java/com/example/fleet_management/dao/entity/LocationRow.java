@@ -1,7 +1,6 @@
 package com.example.fleet_management.dao.entity;
 
 import com.example.fleet_management.domain.Location;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -13,7 +12,6 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "location")
-@EntityListeners(AuditingEntityListener.class)
 public class LocationRow {
 
     @Id
@@ -29,10 +27,10 @@ public class LocationRow {
     @Column(name = "longitude", nullable = false, precision = 9, scale = 6)
     private BigDecimal longitude;
 
-    @OneToMany(mappedBy = "origin", orphanRemoval = true)
+    @OneToMany(mappedBy = "originRow", orphanRemoval = true)
     private Set<DeliveryOrderRow> deliveryOrderOriginRows;
 
-    @OneToMany(mappedBy = "destination", orphanRemoval = true)
+    @OneToMany(mappedBy = "destinationRow", orphanRemoval = true)
     private Set<DeliveryOrderRow> deliveryOrderDestinationRows;
 
     public LocationRow(Long id, String name, BigDecimal latitude, BigDecimal longitude, Set<DeliveryOrderRow> deliveryOrderOriginRows, Set<DeliveryOrderRow> deliveryOrderDestinationRows) {
@@ -96,39 +94,39 @@ public class LocationRow {
 
     public boolean addDeliveryOrderOriginRow(DeliveryOrderRow deliveryOrderRow) {
 
-        if(this.deliveryOrderOriginRows == null) {
+        if(this.deliveryOrderDestinationRows.isEmpty()) {
             this.deliveryOrderOriginRows = new HashSet<>();
         }
 
-        return deliveryOrderOriginRows.add(deliveryOrderRow);
+        return this.deliveryOrderOriginRows.add(deliveryOrderRow);
     }
 
     public boolean addDeliveryOrderDestinationRow(DeliveryOrderRow deliveryOrderRow) {
 
-        if(this.deliveryOrderDestinationRows == null) {
+        if(this.deliveryOrderDestinationRows.isEmpty()) {
             this.deliveryOrderDestinationRows = new HashSet<>();
         }
 
-        return deliveryOrderDestinationRows.add(deliveryOrderRow);
+        return this.deliveryOrderDestinationRows.add(deliveryOrderRow);
     }
 
     public static LocationRow toLocationRow(Location location) {
 
-        final var deliveryOrderOrigins = location.getDeliveryOrderOrigins()
+        final var deliveryOrderOrigins = location.deliveryOrderOrigins()
                 .stream()
                 .map(DeliveryOrderRow::toDeliveryOrderRow)
                 .collect(Collectors.toSet());
 
-        final var deliveryOrderDestinations = location.getDeliveryOrderDestinations()
+        final var deliveryOrderDestinations = location.deliveryOrderDestinations()
                 .stream()
                 .map(DeliveryOrderRow::toDeliveryOrderRow)
                 .collect(Collectors.toSet());
 
         return new LocationRow(
-                location.getId(),
-                location.getName(),
-                location.getLatitude(),
-                location.getLongitude(),
+                location.id(),
+                location.name(),
+                location.latitude(),
+                location.longitude(),
                 deliveryOrderOrigins,
                 deliveryOrderDestinations
         );
@@ -151,13 +149,25 @@ public class LocationRow {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         LocationRow that = (LocationRow) o;
-        return id.equals(that.id) && name.equals(that.name) && latitude.equals(that.latitude) && longitude.equals(that.longitude) && Objects.equals(deliveryOrderOriginRows, that.deliveryOrderOriginRows) && Objects.equals(deliveryOrderDestinationRows, that.deliveryOrderDestinationRows);
+
+        if (!id.equals(that.id)) return false;
+        if (!name.equals(that.name)) return false;
+        if (!latitude.equals(that.latitude)) return false;
+        if (!longitude.equals(that.longitude)) return false;
+        if (!Objects.equals(deliveryOrderOriginRows, that.deliveryOrderOriginRows))
+            return false;
+        return Objects.equals(deliveryOrderDestinationRows, that.deliveryOrderDestinationRows);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, latitude, longitude);
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + latitude.hashCode();
+        result = 31 * result + longitude.hashCode();
+        return result;
     }
 
     @Override
@@ -167,8 +177,6 @@ public class LocationRow {
                 ", name='" + name + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
-                ", deliveryOrderOriginRows=" + deliveryOrderOriginRows +
-                ", deliveryOrderDestinationRows=" + deliveryOrderDestinationRows +
                 '}';
     }
 }

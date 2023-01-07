@@ -7,11 +7,11 @@ public record TruckResponseBody(Long id, String licensePlate, String manufacture
     public static TruckResponseBody fromTruck(Truck truck) {
 
         return new TruckResponseBody(
-                truck.getId(),
-                truck.getLicensePlate(),
-                truck.getManufacturer(),
-                truck.getModel(),
-                truck.getKilometersPerLiter()
+                truck.id(),
+                truck.licensePlate(),
+                truck.manufacturer(),
+                truck.model(),
+                truck.kilometersPerLiter()
         );
     }
 

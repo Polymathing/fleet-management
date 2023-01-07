@@ -2,8 +2,7 @@ package com.example.fleet_management.web.controller;
 
 import com.example.fleet_management.domain.service.LocationService;
 import com.example.fleet_management.exception.ExistingRecordException;
-import com.example.fleet_management.exception.location.InvalidLatitudeException;
-import com.example.fleet_management.exception.location.InvalidLongitudeException;
+import com.example.fleet_management.exception.location.InvalidCoordinateException;
 import com.example.fleet_management.web.dto.error.ErrorResponseBody;
 import com.example.fleet_management.web.dto.request.LocationRequestBody;
 import com.example.fleet_management.web.dto.response.LocationResponseBody;
@@ -51,25 +50,17 @@ public class LocationController {
 
             final var location = service.save(body.toLocation());
 
-            return ResponseEntity.ok(fromLocation(location));
+            return ResponseEntity
+                    .status(201)
+                    .body(fromLocation(location));
         }
-        catch (ExistingRecordException | InvalidLatitudeException | InvalidLongitudeException e) {
+        catch (ExistingRecordException | InvalidCoordinateException e) {
 
             final var error = new ErrorResponseBody(e.getMessage());
 
             return ResponseEntity.badRequest()
                     .body(error);
         }
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody LocationRequestBody body) {
-
-        final var location = service
-                .update(id, body.toLocation())
-                .map(LocationResponseBody::fromLocation);
-
-        return ResponseEntity.of(location);
     }
 
     @DeleteMapping("/{id}")

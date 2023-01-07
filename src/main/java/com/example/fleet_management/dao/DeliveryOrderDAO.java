@@ -70,8 +70,8 @@ public class DeliveryOrderDAO {
         final var deliveryOrderRow = new DeliveryOrderRow();
 
         deliveryOrderRow.setTruckRow(truck);
-        deliveryOrderRow.setOrigin(origin);
-        deliveryOrderRow.setDestination(destination);
+        deliveryOrderRow.setOriginRow(origin);
+        deliveryOrderRow.setDestinationRow(destination);
 
         final var distance = calculateDistanceInKilometers(
                 origin.getLatitude(), origin.getLongitude(),
@@ -86,7 +86,7 @@ public class DeliveryOrderDAO {
         return deliveryOrderRow;
     }
 
-    private static BigDecimal calculateDistanceInKilometers(BigDecimal lat1, BigDecimal lon1,
+    protected static BigDecimal calculateDistanceInKilometers(BigDecimal lat1, BigDecimal lon1,
                                                             BigDecimal lat2, BigDecimal lon2) {
 
         if ((Objects.equals(lat1, lat2)) && (Objects.equals(lon1, lon2))) {

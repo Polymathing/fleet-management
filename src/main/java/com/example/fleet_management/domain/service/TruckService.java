@@ -3,7 +3,6 @@ package com.example.fleet_management.domain.service;
 import com.example.fleet_management.dao.TruckDAO;
 import com.example.fleet_management.domain.Truck;
 import com.example.fleet_management.exception.ExistingRecordException;
-import com.example.fleet_management.exception.truck.ExistingLicensePlateException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -37,14 +36,14 @@ public class TruckService {
 
     private void validateNewTruck(Truck truck) {
 
-        final var opTruckById = dao.findById(truck.getId());
-        final var opTruckByLicensePlate = dao.findByLicensePlate(truck.getLicensePlate());
+        final var opTruckById = dao.findById(truck.id());
+        final var opTruckByLicensePlate = dao.findByLicensePlate(truck.licensePlate());
 
         if(opTruckById.isPresent()) {
             throw new ExistingRecordException("truck", "ID");
         }
         else if(opTruckByLicensePlate.isPresent()) {
-            throw new ExistingLicensePlateException(truck.getLicensePlate());
+            throw new ExistingRecordException("truck", "License Plate");
         }
     }
 

@@ -52,7 +52,7 @@ public class DeliveryOrderController {
 
             final var deliveryOrder = service.save(licensePlate, originId, destinationId);
 
-            return ResponseEntity.ok(fromDeliveryOrder(deliveryOrder));
+            return ResponseEntity.status(HttpStatus.CREATED).body(fromDeliveryOrder(deliveryOrder));
         }
         catch (RecordNotFoundException e) {
 

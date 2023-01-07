@@ -6,7 +6,6 @@ import org.hibernate.annotations.NaturalId;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -95,7 +94,7 @@ public class TruckRow {
 
     public boolean addDeliveryOrderRecord(DeliveryOrderRow deliveryOrderRow) {
 
-        if(this.deliveryOrderRows == null) {
+        if(this.deliveryOrderRows.isEmpty()) {
             this.deliveryOrderRows = new HashSet<>();
         }
 
@@ -104,17 +103,17 @@ public class TruckRow {
 
     public static TruckRow toTruckRow(Truck truck) {
 
-        final var deliveryOrderRows = truck.getDeliveryOrderSet()
+        final var deliveryOrderRows = truck.deliveryOrderSet()
                 .stream()
                 .map(DeliveryOrderRow::toDeliveryOrderRow)
                 .collect(Collectors.toSet());
 
         return new TruckRow(
-                truck.getId(),
-                truck.getLicensePlate(),
-                truck.getManufacturer(),
-                truck.getModel(),
-                truck.getKilometersPerLiter(),
+                truck.id(),
+                truck.licensePlate(),
+                truck.manufacturer(),
+                truck.model(),
+                truck.kilometersPerLiter(),
                 deliveryOrderRows
         );
     }
@@ -135,13 +134,24 @@ public class TruckRow {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         TruckRow truckRow = (TruckRow) o;
-        return Objects.equals(id, truckRow.id) && Objects.equals(licensePlate, truckRow.licensePlate) && Objects.equals(manufacturer, truckRow.manufacturer) && Objects.equals(model, truckRow.model) && Objects.equals(kilometersPerLiter, truckRow.kilometersPerLiter) && Objects.equals(deliveryOrderRows, truckRow.deliveryOrderRows);
+
+        if (!id.equals(truckRow.id)) return false;
+        if (!licensePlate.equals(truckRow.licensePlate)) return false;
+        if (!manufacturer.equals(truckRow.manufacturer)) return false;
+        if (!model.equals(truckRow.model)) return false;
+        return kilometersPerLiter.equals(truckRow.kilometersPerLiter);
     }
 
     @Override
     public int hashCode() {
-        return 13;
+        int result = id.hashCode();
+        result = 31 * result + licensePlate.hashCode();
+        result = 31 * result + manufacturer.hashCode();
+        result = 31 * result + model.hashCode();
+        result = 31 * result + kilometersPerLiter.hashCode();
+        return result;
     }
 
     @Override

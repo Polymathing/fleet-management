@@ -58,7 +58,7 @@ public class TruckDAO {
         return truckRepository.findById(id)
                 .map(dbRecord -> {
 
-                    dbRecord.setKilometersPerLiter(truck.getKilometersPerLiter());
+                    dbRecord.setKilometersPerLiter(truck.kilometersPerLiter());
 
                     return dbRecord;
                 }).map(TruckRow::toTruck);

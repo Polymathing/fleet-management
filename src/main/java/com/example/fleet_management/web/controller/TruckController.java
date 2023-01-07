@@ -2,7 +2,6 @@ package com.example.fleet_management.web.controller;
 
 import com.example.fleet_management.domain.service.TruckService;
 import com.example.fleet_management.exception.ExistingRecordException;
-import com.example.fleet_management.exception.truck.ExistingLicensePlateException;
 import com.example.fleet_management.web.dto.error.ErrorResponseBody;
 import com.example.fleet_management.web.dto.request.TruckRequestBody;
 import com.example.fleet_management.web.dto.response.TruckResponseBody;
@@ -51,9 +50,11 @@ public class TruckController {
         try {
 
             final var truck = service.save(body.toTruck());
-            return ResponseEntity.ok(fromTruck(truck));
+            return ResponseEntity
+                    .status(201)
+                    .body(fromTruck(truck));
         }
-        catch (ExistingRecordException | ExistingLicensePlateException e) {
+        catch (ExistingRecordException e) {
 
             final var response = new ErrorResponseBody(e.getMessage());
 

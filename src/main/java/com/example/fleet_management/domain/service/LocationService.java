@@ -2,11 +2,9 @@ package com.example.fleet_management.domain.service;
 
 import com.example.fleet_management.dao.LocationDAO;
 import com.example.fleet_management.domain.Location;
-import com.example.fleet_management.domain.validator.LocationLatitudeValidator;
-import com.example.fleet_management.domain.validator.LocationLongitudeValidator;
+import com.example.fleet_management.domain.validator.LocationGeoCoordinateValidator;
 import com.example.fleet_management.exception.ExistingRecordException;
-import com.example.fleet_management.exception.location.InvalidLatitudeException;
-import com.example.fleet_management.exception.location.InvalidLongitudeException;
+import com.example.fleet_management.exception.location.InvalidCoordinateException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,14 +12,12 @@ import java.util.Set;
 
 @Service
 public class LocationService {
-    private final LocationLatitudeValidator latitudeValidator;
-    private final LocationLongitudeValidator longitudeValidator;
+    private final LocationGeoCoordinateValidator coordinateValidator;
     private final LocationDAO dao;
 
-    public LocationService(LocationDAO dao, LocationLatitudeValidator latitudeValidator, LocationLongitudeValidator longitudeValidator) {
+    public LocationService(LocationDAO dao, LocationGeoCoordinateValidator coordinateValidator) {
         this.dao = dao;
-        this.latitudeValidator = latitudeValidator;
-        this.longitudeValidator = longitudeValidator;
+        this.coordinateValidator = coordinateValidator;
     }
 
     public Set<Location> findAll() {
@@ -34,6 +30,11 @@ public class LocationService {
         return dao.findById(id);
     }
 
+    public Optional<Location> findByName(String name) {
+
+        return dao.findByName(name);
+    }
+
     public Location save(Location location) {
 
         validateNewLocation(location);
@@ -43,10 +44,10 @@ public class LocationService {
 
     private void validateNewLocation(Location location) {
 
-        final var locationIdExists = dao.findById(location.getId()).isPresent();
-        final var locationNameExists = dao.findByName(location.getName()).isPresent();
-        final var latitudeIsValid = latitudeValidator.isLatitudeValid(location.getLatitude().toString());
-        final var longitudeIsValid = longitudeValidator.isLatitudeValid(location.getLongitude().toString());
+        final var locationIdExists = findById(location.id()).isPresent();
+        final var locationNameExists = findByName(location.name()).isPresent();
+        final var latitudeIsValid = coordinateValidator.isCoordinateValid(location.latitude().toString());
+        final var longitudeIsValid = coordinateValidator.isCoordinateValid(location.longitude().toString());
 
         if(locationIdExists) {
             throw new ExistingRecordException("location", "ID");
@@ -55,10 +56,10 @@ public class LocationService {
             throw new ExistingRecordException("location", "name");
         }
         else if(!latitudeIsValid) {
-            throw new InvalidLatitudeException(location.getLatitude().toString());
+            throw new InvalidCoordinateException("Latitude", location.latitude().toString());
         }
         else if(!longitudeIsValid) {
-            throw new InvalidLongitudeException(location.getLongitude().toString());
+            throw new InvalidCoordinateException("Longitude", location.longitude().toString());
         }
     }
 

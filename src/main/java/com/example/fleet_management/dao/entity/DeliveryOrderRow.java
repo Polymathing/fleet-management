@@ -5,7 +5,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import static com.example.fleet_management.dao.entity.LocationRow.toLocationRow;
 import static com.example.fleet_management.dao.entity.TruckRow.toTruckRow;
@@ -25,11 +24,11 @@ public class DeliveryOrderRow {
 
     @ManyToOne
     @JoinColumn(name = "origin_id", updatable = false)
-    private LocationRow origin;
+    private LocationRow originRow;
 
     @ManyToOne
     @JoinColumn(name = "destination_id", updatable = false)
-    private LocationRow destination;
+    private LocationRow destinationRow;
 
     @Column(name = "distance", nullable = false, updatable = false)
     private Double distance;
@@ -38,16 +37,17 @@ public class DeliveryOrderRow {
     @Column(name = "date_time", nullable = false, updatable = false)
     private LocalDateTime dateTime;
 
-    public DeliveryOrderRow(Long id, TruckRow truckRow, LocationRow origin, LocationRow destination, Double distance, LocalDateTime dateTime) {
+    public DeliveryOrderRow(Long id, TruckRow truckRow, LocationRow originRow, LocationRow destinationRow, Double distance, LocalDateTime dateTime) {
         this.id = id;
         this.truckRow = truckRow;
-        this.origin = origin;
-        this.destination = destination;
+        this.originRow = originRow;
+        this.destinationRow = destinationRow;
         this.distance = distance;
         this.dateTime = dateTime;
     }
 
-    public DeliveryOrderRow() { }
+    public DeliveryOrderRow() {
+    }
 
     public Long getId() {
         return id;
@@ -65,20 +65,20 @@ public class DeliveryOrderRow {
         this.truckRow = truckRow;
     }
 
-    public LocationRow getOrigin() {
-        return origin;
+    public LocationRow getOriginRow() {
+        return originRow;
     }
 
-    public void setOrigin(LocationRow origin) {
-        this.origin = origin;
+    public void setOriginRow(LocationRow origin) {
+        this.originRow = origin;
     }
 
-    public LocationRow getDestination() {
-        return destination;
+    public LocationRow getDestinationRow() {
+        return destinationRow;
     }
 
-    public void setDestination(LocationRow destination) {
-        this.destination = destination;
+    public void setDestinationRow(LocationRow destination) {
+        this.destinationRow = destination;
     }
 
     public Double getDistance() {
@@ -116,8 +116,8 @@ public class DeliveryOrderRow {
     public DeliveryOrder toDeliveryOrder() {
 
         final var truck = this.getTruckRow().toTruck();
-        final var origin = this.getOrigin().toLocation();
-        final var destination = this.getDestination().toLocation();
+        final var origin = this.getOriginRow().toLocation();
+        final var destination = this.getDestinationRow().toLocation();
 
         return new DeliveryOrder(
 
@@ -130,21 +130,27 @@ public class DeliveryOrderRow {
         );
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         DeliveryOrderRow that = (DeliveryOrderRow) o;
-        return Objects.equals(id, that.id) && truckRow.equals(that.truckRow) && origin.equals(that.origin) && destination.equals(that.destination) && distance.equals(that.distance) && dateTime.equals(that.dateTime);
+
+        if (!id.equals(that.id)) return false;
+        if (!truckRow.equals(that.truckRow)) return false;
+        if (!originRow.equals(that.originRow)) return false;
+        if (!destinationRow.equals(that.destinationRow)) return false;
+        if (!distance.equals(that.distance)) return false;
+        return dateTime.equals(that.dateTime);
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (truckRow != null ? truckRow.hashCode() : 0);
-        result = 31 * result + (origin != null ? origin.hashCode() : 0);
-        result = 31 * result + (destination != null ? destination.hashCode() : 0);
+        result = 31 * result + (originRow != null ? originRow.hashCode() : 0);
+        result = 31 * result + (destinationRow != null ? destinationRow.hashCode() : 0);
         result = 31 * result + (distance != null ? distance.hashCode() : 0);
         result = 31 * result + (dateTime != null ? dateTime.hashCode() : 0);
         return result;
@@ -155,8 +161,8 @@ public class DeliveryOrderRow {
         return "DeliveryOrderRow{" +
                 "id=" + id +
                 ", truckRow=" + truckRow +
-                ", origin=" + origin +
-                ", destination=" + destination +
+                ", originRow=" + originRow +
+                ", destinationRow=" + destinationRow +
                 ", distance=" + distance +
                 ", dateTime=" + dateTime +
                 '}';
