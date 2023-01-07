@@ -50,7 +50,9 @@ public class TruckController {
         try {
 
             final var truck = service.save(body.toTruck());
-            return ResponseEntity.ok(fromTruck(truck));
+            return ResponseEntity
+                    .status(201)
+                    .body(fromTruck(truck));
         }
         catch (ExistingRecordException e) {
 

@@ -30,6 +30,11 @@ public class LocationService {
         return dao.findById(id);
     }
 
+    public Optional<Location> findByName(String name) {
+
+        return dao.findByName(name);
+    }
+
     public Location save(Location location) {
 
         validateNewLocation(location);
@@ -39,8 +44,8 @@ public class LocationService {
 
     private void validateNewLocation(Location location) {
 
-        final var locationIdExists = dao.findById(location.id()).isPresent();
-        final var locationNameExists = dao.findByName(location.name()).isPresent();
+        final var locationIdExists = findById(location.id()).isPresent();
+        final var locationNameExists = findByName(location.name()).isPresent();
         final var latitudeIsValid = coordinateValidator.isCoordinateValid(location.latitude().toString());
         final var longitudeIsValid = coordinateValidator.isCoordinateValid(location.longitude().toString());
 

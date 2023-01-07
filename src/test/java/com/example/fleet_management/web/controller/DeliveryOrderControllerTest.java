@@ -76,7 +76,7 @@ public class DeliveryOrderControllerTest {
     }
 
     @Test
-    void findAll_WhenNoDataIsFound_Returns200EmptySet() {
+    void findAll_WhenNoDataIsNotFound_Returns200EmptySet() {
 
         when(service.findAll()).thenReturn(Collections.emptySet());
 

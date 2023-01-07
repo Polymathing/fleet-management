@@ -50,7 +50,9 @@ public class LocationController {
 
             final var location = service.save(body.toLocation());
 
-            return ResponseEntity.ok(fromLocation(location));
+            return ResponseEntity
+                    .status(201)
+                    .body(fromLocation(location));
         }
         catch (ExistingRecordException | InvalidCoordinateException e) {
 
@@ -59,16 +61,6 @@ public class LocationController {
             return ResponseEntity.badRequest()
                     .body(error);
         }
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody LocationRequestBody body) {
-
-        final var location = service
-                .update(id, body.toLocation())
-                .map(LocationResponseBody::fromLocation);
-
-        return ResponseEntity.of(location);
     }
 
     @DeleteMapping("/{id}")
